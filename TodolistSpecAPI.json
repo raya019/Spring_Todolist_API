@@ -1,0 +1,530 @@
+{
+  "openapi": "3.0.2" ,
+  "info": {
+    "title": "Todolist API" ,
+    "version": "1.0"
+  } ,
+  "servers": [
+    {
+      "url": "https://localhost:8080"
+    }
+  ] ,
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ] ,
+        "summary": "Create User" ,
+        "description": "Create New User" ,
+        "requestBody": {
+          "$ref": "#/components/requestBodies/RegisterUser"
+        } ,
+        "responses": {
+          "200": {
+           "$ref": "#/components/responses/AuthRegisterResponse"
+          }
+        }
+      }
+    } ,
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ] ,
+        "summary": "Create User" ,
+        "description": "Create New User" ,
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UserLogin"
+        } ,
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/AuthLoginResponse"
+          }
+        }
+      }
+    } ,
+
+    "/user/current": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "refreshToken": []
+          }
+        ] ,
+        "tags": [
+          "User"
+        ] ,
+        "summary": "Get User" ,
+        "description": "Get User",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetUser"
+          }
+        }
+      },
+      "patch": {
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "refreshToken": []
+          }
+        ] ,
+        "tags": [
+          "User"
+        ] ,
+        "summary": "Update User" ,
+        "description": "Update User",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UpdateUserRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PatchUser"
+          }
+        }
+      }
+    },
+
+    "/api/todolist/get": {
+      "get": {
+        "security": [
+          {
+              "bearerAuth": []
+          },
+          {
+              "refreshToken": []
+          }
+        ] ,
+        "tags": [
+          "Todolist"
+        ] ,
+        "summary": "Get All Todolist" ,
+        "description": "Get All Todolist By User" ,
+        "responses": {
+          "200": {
+            "$ref" : "#/components/responses/GetTodolist"
+          }
+        }
+      }
+    } ,
+    "/api/todolist/add": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "refreshToken": []
+          }
+        ] ,
+        "tags": [
+          "Todolist"
+        ] ,
+        "summary": "Create Todolist" ,
+        "description": "Create New Todolist" ,
+        "requestBody": {
+          "$ref": "#/components/requestBodies/TodoAddRequest"
+        } ,
+        "responses": {
+          "200": {
+            "$ref" : "#/components/responses/AddTodolist"
+          }
+        }
+      }
+    } ,
+    "/api/todolist/update/{id}": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "refreshToken": []
+          }
+        ] ,
+        "tags": [
+          "Todolist"
+        ] ,
+        "summary": "Update Todolist" ,
+        "description": "update Todolist By User" ,
+        "requestBody": {
+          "$ref": "#/components/requestBodies/TodoUpdateRequest"
+        } ,
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TodolistId"
+          }
+        ] ,
+        "responses": {
+          "200": {
+            "$ref" : "#/components/responses/UpdateTodolist"
+          }
+        }
+      }
+    } ,
+    "/api/todolist/delete/{id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "refreshToken": []
+          }
+        ] ,
+        "tags": [
+          "Todolist"
+        ] ,
+        "summary": "Delete Todolist" ,
+        "description": "delete Todolist By User" ,
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TodolistId"
+          }
+        ] ,
+        "responses": {
+          "200": {
+            "$ref" : "#/components/responses/DeleteTodolist"
+          }
+        }
+      }
+    }
+  } ,
+  "components": {
+    "schemas": {
+      "Token" : {
+        "type": "object" ,
+        "properties": {
+          "AccessToken": {
+            "type": "string"
+          } ,
+          "RefreshToken": {
+            "type": "string"
+          }
+        }
+      } ,
+
+      "UserResponse": {
+        "type": "object" ,
+        "properties": {
+          "name": {
+            "type": "string"
+          } ,
+          "email": {
+            "type": "string"
+          } ,
+          "phone": {
+            "type": "string"
+        }
+        }
+      },
+      "UserUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string" ,
+            "required": false ,
+            "minLength": 1 ,
+            "maxLength": 30
+          } ,
+          "email": {
+            "type": "string" ,
+            "required": false ,
+            "minLength": 1 ,
+            "maxLength": 30
+          } ,
+          "password": {
+            "type": "string" ,
+            "required": false ,
+            "minLength": 1 ,
+            "maxLength": 8
+          } ,
+          "phone": {
+            "type": "string" ,
+            "required": false ,
+            "minLength": 1 ,
+            "maxLength": 15
+          }
+        }
+      },
+      "UserRequest": {
+        "type": "object" ,
+        "properties": {
+          "name": {
+            "type": "string" ,
+            "required": true ,
+            "minLength": 1 ,
+            "maxLength": 30
+          } ,
+          "email": {
+            "type": "string" ,
+            "required": true ,
+            "minLength": 1 ,
+            "maxLength": 30
+          } ,
+          "password": {
+            "type": "string" ,
+            "required": true ,
+            "minLength": 1 ,
+            "maxLength": 8
+          } ,
+          "phone": {
+            "type": "string" ,
+            "required": true ,
+            "minLength": 1 ,
+            "maxLength": 15
+          }
+        }
+      },
+      "UserLoginRequest": {
+        "type": "object" ,
+        "properties": {
+          "email": {
+            "type": "string" ,
+            "required": true ,
+            "minLength": 1 ,
+            "maxLength": 30
+          } ,
+          "password": {
+            "type": "string" ,
+            "required": true ,
+            "minLength": 1 ,
+            "maxLength": 8
+          }
+        }
+      },
+
+      "TodolistResponse": {
+        "type": "object" ,
+        "properties": {
+          "id": {
+            "type": "string"
+          } ,
+          "todo": {
+            "type": "string"
+          } ,
+          "description": {
+            "type": "string"
+          } ,
+          "isDone": {
+            "type": "boolean"
+          }
+        }
+      } ,
+      "TodolistRequest": {
+        "type": "object" ,
+        "properties": {
+          "todo": {
+            "type": "string" ,
+            "required": true ,
+            "minLength": 1 ,
+            "maxLength": 100
+          } ,
+          "description": {
+            "type": "string" ,
+            "required": true ,
+            "minLength": 1 ,
+            "maxLength": 255
+          }
+        }
+      } ,
+      "TodolistUpdateRequest": {
+        "type": "object" ,
+        "properties": {
+          "todo": {
+            "type": "string" ,
+            "required": true ,
+            "minLength": 1 ,
+            "maxLength": 100
+          } ,
+          "description": {
+            "type": "string" ,
+            "required": true ,
+            "minLength": 1 ,
+            "maxLength": 255
+          } ,
+          "isDone": {
+            "type": "boolean" ,
+            "required": true
+          }
+        }
+      }
+    } ,
+    "parameters": {
+      "TodolistId": {
+        "name": "id" ,
+        "description": "id of Todolist" ,
+        "in": "path" ,
+        "required": true ,
+        "schema": {
+          "type": "string"
+        }
+      }
+    } ,
+    "requestBodies": {
+      "UpdateUserRequest": {
+        "required": true ,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UserUpdateRequest"
+            }
+          }
+        }
+      },
+      "RegisterUser": {
+        "required": true ,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UserRequest"
+            }
+          }
+        }
+      },
+      "UserLogin": {
+        "required": true ,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UserLoginRequest"
+            }
+          }
+        }
+      },
+      "TodoAddRequest": {
+        "required": true ,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TodolistRequest"
+            }
+          }
+        }
+      } ,
+      "TodoUpdateRequest": {
+        "required": true ,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TodolistRequest"
+            }
+          }
+        }
+      }
+    } ,
+    "responses": {
+      "AuthRegisterResponse": {
+        "description": "Success Create User" ,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object" ,
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "AuthLoginResponse": {
+        "description": "Success Login User" ,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Token"
+            }
+          }
+        }
+      },
+      "GetUser": {
+        "description": "success get user" ,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UserResponse"
+            }
+          }
+        }
+      },
+      "PatchUser": {
+        "description": "success Update user" ,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UserResponse"
+            }
+          }
+        }
+      },
+      "GetTodolist": {
+        "description": "success get all todolist" ,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array" ,
+              "items": {
+                "$ref": "#/components/schemas/TodolistResponse"
+              }
+            }
+          }
+        }
+      },
+      "AddTodolist": {
+        "description": "Success Add Todolist" ,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TodolistResponse"
+            }
+          }
+        }
+      },
+      "UpdateTodolist": {
+        "description": "success update todolist" ,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TodolistResponse"
+            }
+          }
+        }
+      },
+      "DeleteTodolist": {
+        "description": "Success Delete Todolist" ,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object" ,
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    } ,
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http" ,
+        "scheme": "bearer" ,
+        "bearerFormat": "JWT"
+      } ,
+      "refreshToken": {
+        "type": "apiKey" ,
+        "in": "cookie" ,
+        "name": "cookie"
+      }
+    }
+  }
+}
